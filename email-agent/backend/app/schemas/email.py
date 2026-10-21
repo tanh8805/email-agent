@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -5,6 +7,8 @@ class EmailWebhookIn(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     id: str
+    provider: Literal["gmail", "outlook"] = "gmail"
+    account: str = ""
     thread_id: str | None = Field(default=None, alias="threadId")
     sender: str | None = Field(default=None, alias="from")
     to: str | list[str] | None = None
@@ -14,6 +18,6 @@ class EmailWebhookIn(BaseModel):
 
 
 class EmailWebhookOut(BaseModel):
-    status: str = "received"
+    status: Literal["received", "duplicate"] = "received"
     id: str
     thread_id: str | None = Field(default=None, serialization_alias="threadId")
